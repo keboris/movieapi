@@ -8,5 +8,31 @@
 
     <title>TMBD Movies</title>
   </head>
-  <body></body>
+  <body class="bg-gray-900 text-white min-h-screen flex flex-col">
+    <header class="bg-gray-800 shadow-md sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-yellow-400">🎥 TMBD Movies</h1>
+        <input
+          type="text"
+          placeholder="Search a film..."
+          class="px-4 py-2 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-64"
+        />
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 py-6">
+      <h2 class="text-xl font-semibold mb-4">Popular Movies</h2>
+
+      <div
+        id="movies-container"
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      ></div>
+    </main>
+
+    <footer class="bg-gray-800 py-4 mt-6">
+      <p class="text-center text-gray-400 text-sm">
+        @2025 TMBD Movies by Kira, Frank and Boris - All rights reserved
+      </p>
+    </footer>
+  </body>
 </html>
