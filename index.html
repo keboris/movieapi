@@ -28,6 +28,52 @@
           </a>
         </div>
       </div>
+
+      <!-- Modal Anzeige Suchergebniss -->
+      <div
+        id="searchModalContainer"
+        class="fixed inset-0 z-50 grid place-content-center bg-black/50 p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+        aria-disabled="true"
+        style="display: none"
+      >
+        <!-- div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-900" -->
+        <div
+          class="bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-xl transition transform"
+        >
+          <h2 id="modalTitle" class="text-2xl font-bold text-yellow-400">
+            Suchergebnis
+          </h2>
+
+          <div class="mt-4">
+            <ul
+              id="searchResult"
+              class="text-pretty text-gray-700 dark:text-gray-200"
+            ></ul>
+          </div>
+
+          <footer class="mt-6 flex justify-end gap-2">
+            <button
+              type="button"
+              class="rounded bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              Cancel
+            </button>
+
+            <button
+              id="btnDone"
+              type="button"
+              class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
+              Done
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Ende Modal Anzeige Suchergebnis -->
     </header>
 
     <main class="flex-1 max-w-7xl mx-auto px-4 py-6">
