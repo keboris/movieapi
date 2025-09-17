@@ -16,6 +16,8 @@
         </h1>
         <div class="flex items-center gap-4">
           <input
+            id="search-container"
+            name="search-input"
             type="text"
             placeholder="Search a film..."
             class="px-4 py-2 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-64"
@@ -30,17 +32,17 @@
       </div>
 
       <!-- Modal Anzeige Suchergebniss -->
-      <div
-        id="searchModalContainer"
+      <!--div
+        id="searchModalContainer1"
         class="fixed inset-0 z-50 grid place-content-center bg-black/50 p-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modalTitle"
         aria-disabled="true"
         style="display: none"
-      >
-        <!-- div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-900" -->
-        <div
+    -->
+      <!-- div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-900" -->
+      <!--div
           class="bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-xl transition transform"
         >
           <h2 id="modalTitle" class="text-2xl font-bold text-yellow-400">
@@ -71,7 +73,7 @@
             </button>
           </footer>
         </div>
-      </div>
+      </div-->
 
       <!-- Ende Modal Anzeige Suchergebnis -->
     </header>
@@ -90,5 +92,46 @@
         @2025 TMBD Movies by Kira, Frank and Boris - All rights reserved
       </p>
     </footer>
+
+    <!-- Modal Search -->
+    <div
+      id="searchModal"
+      class="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-start pt-20 z-50 hidden"
+    >
+      <div class="bg-gray-800 shadow-md rounded-xl p-4 w-xl mx-auto">
+        <input
+          id="searchModalContainer"
+          name="searchInput"
+          type="text"
+          placeholder="Search a film..."
+          class="px-4 py-2 mb-4 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full"
+        />
+        <ul
+          id="searchResults"
+          class="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto"
+        ></ul>
+      </div>
+    </div>
+    <!-- -->
+
+    <!-- Modal Details Movie -->
+    <div
+      id="movieModal"
+      class="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-center z-50 hidden"
+    >
+      <div
+        id="movieModal-container"
+        class="flex flex-col items-center sm:flex-row w-[80%] bg-black rounded-lg"
+      >
+        <!--button
+          id="closeModal"
+          class="absolute top-3 right-3 text-white text-3xl cursor-pointer font-bold hover:text-red-500 transition"
+        >
+          &times;
+        </button>
+        <div id="modalContent" class=""></div-->
+      </div>
+    </div>
+    <!-- -->
   </body>
 </html>
