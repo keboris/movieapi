@@ -131,4 +131,5 @@ firstButton.addEventListener("click", () => {
 const secondButton = document.getElementById("btnDone");
 secondButton.addEventListener("click", () => {
   document.getElementById("searchModalContainer").style = "display: none";
+  searchInput.value = "";
 });
