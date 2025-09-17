@@ -70,3 +70,65 @@ const renderPopular = (data) => {
   movies.forEach((movie) => renderMovie(movie));
   console.log("Result : ", movies);
 };
+
+// Funktionen für die Suche
+// Abschnitt für die Suchfunktion
+// Eine globale click Aktion für die modale Liste
+const searchResultContainer = document.getElementById("searchResult");
+searchResultContainer.addEventListener("click", (e) => {
+  console.log(e.target);
+  console.log("@@@: " + e.target.getAttribute("id"));
+});
+
+const renderSearchResult = (data) => {
+  const html = `
+  <li class="bg- text-gray-400 text-sm" id="${data.id}">Title: ${truncate(
+    data.title,
+    120
+  )} release: ${data.release_date}"></li>
+  `;
+  searchResultContainer.insertAdjacentHTML("beforeend", html);
+};
+
+const renderSearch = (data) => {
+  const movieList = data.results;
+  movieList.forEach((movie) => renderSearchResult(movie));
+};
+
+const movieSearch = async (urlSearch) => {
+  try {
+    const movieResultList = document.getElementById("searchModalContainer");
+    searchResultContainer.innerHTML = "";
+    const res = await fetch(urlSearch, options);
+    if (!res.ok) throw new Error("Daten konnten nicht geladen werden!");
+    const data = await res.json();
+    renderSearch(data);
+    document.getElementById("searchModalContainer").style = "";
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const searchInput = document.querySelector(
+  "body > header > div.max-w-7xl.mx-auto.flex.justify-between.items-center.p-4 > div > input"
+);
+
+if (searchInput) {
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      const searchString = searchInput.value;
+      const urlSearch = `https://api.themoviedb.org/3/search/movie?query=${searchString}&include_adult=false&language=en-US&page=1`;
+      movieSearch(urlSearch);
+    }
+  });
+}
+
+const firstButton = document.querySelector("footer button");
+firstButton.addEventListener("click", () => {
+  document.getElementById("searchModalContainer").style = "display: none";
+});
+
+const secondButton = document.getElementById("btnDone");
+secondButton.addEventListener("click", () => {
+  document.getElementById("searchModalContainer").style = "display: none";
+});
