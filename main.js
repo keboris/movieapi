@@ -126,7 +126,7 @@ const renderSearchResult = (data) => {
   const imgMovie =
     data.poster_path === null
       ? data.backdrop_path === null
-        ? "/src/tmdb.jpeg"
+        ? "src/tmdb.jpeg"
         : "https://image.tmdb.org/t/p/w500/" + data.backdrop_path
       : "https://image.tmdb.org/t/p/w500/" + data.poster_path;
 
