@@ -54,9 +54,10 @@ searchModal.addEventListener("click", (e) => {
 searchModalContainer.addEventListener("input", (e) => {
   const inputText = e.target.value;
 
-  fetch(urlPopular, options)
+  const searchUrl = `https://api.themoviedb.org/3/search/movie?query=${inputText}&include_adult=false&language=en-US&page=1`;
+  fetch(searchUrl, options)
     .then((res) => res.json())
-    .then((json) => renderSearch(json, inputText))
+    .then((json) => renderSearch(json))
     .catch((err) => console.error(err));
 });
 
@@ -122,6 +123,13 @@ const renderPopular = (data) => {
 const renderSearchResult = (data) => {
   const genres = checkGenre(data.genre_ids);
 
+  const imgMovie =
+    data.poster_path === null
+      ? data.backdrop_path === null
+        ? "/src/tmdb.jpeg"
+        : "https://image.tmdb.org/t/p/w500/" + data.backdrop_path
+      : "https://image.tmdb.org/t/p/w500/" + data.poster_path;
+
   const html = `
   <li data-movie-id="${
     data.id
@@ -137,7 +145,7 @@ const renderSearchResult = (data) => {
       <p class="text-gray-300 text-sm group-hover:text-green-900 group-hover:font-bold">🎬 <span class="italic">${genres}</span></p>
     </div>
     <img
-      src="https://image.tmdb.org/t/p/w500/${data.poster_path}"
+      src="${imgMovie}"
       alt="${data.title}"
       class="w-12 h-12 rounded mr-4 object-cover" />
   </li>
@@ -145,7 +153,27 @@ const renderSearchResult = (data) => {
   searchResults.insertAdjacentHTML("beforeend", html);
 };
 
-const renderSearch = (data, word) => {
+const renderSearch = (data) => {
+  const movieList = data.results;
+
+  searchResults.innerHTML = "";
+
+  if (movieList.length === 0) {
+    const html = `
+  <li class="flex justify-center py-2 rounded-lg bg-gray-700">
+    <p class="ml-4 font-semibold">
+      No movies were found according to your search
+    </p>
+  </li>
+  `;
+    searchResults.insertAdjacentHTML("beforeend", html);
+    return;
+  }
+
+  movieList.forEach((movie) => renderSearchResult(movie));
+};
+
+/*const renderSearch = (data, word) => {
   const movieList = data.results;
 
   searchResults.innerHTML = "";
@@ -170,7 +198,7 @@ const renderSearch = (data, word) => {
 
   filterMovie.forEach((movie) => renderSearchResult(movie));
 };
-
+*/
 const renderMovieDetails = (movieId) => {
   console.log("je suis ici");
   const urlMovie = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
