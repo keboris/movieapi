@@ -303,6 +303,35 @@ function checkGenreDetail(genres) {
   return names.join(", ");
 }
 
+//NEU
+// Fügt einen Film zu Favoriten hinzu
+function addToFavorites(id, title, poster, releaseDate, button) {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+  const isAlreadyFavorite = favorites.find((f) => f.id === id);
+
+  if (!isAlreadyFavorite) {
+    favorites.push({ id, title, poster, releaseDate });
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    if (button) {
+      button.textContent = "⭐ Favorit";
+      button.disabled = true;
+      button.classList.remove("bg-green-400", "hover:bg-green-300");
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+    }
+
+    alert(`${title} wurde zu deinen Favoriten hinzugefügt!`);
+  } else {
+    if (button) {
+      button.textContent = "⭐ Favorit";
+      button.disabled = true;
+      button.classList.remove("bg-green-400", "hover:bg-green-300");
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+    }
+    alert(`${title} ist bereits in deinen Favoriten.`);
+  }
+}
 // Funktionen für die Suche
 // Abschnitt für die Suchfunktion
 // Eine globale click Aktion für die modale Liste
