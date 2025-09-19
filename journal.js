@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-  // Zeige oder verstecke die Nachricht, wenn keine Favoriten vorhanden sind
   if (favorites.length === 0) {
     emptyMessage.classList.remove("hidden");
   } else {
     emptyMessage.classList.add("hidden");
+
     favorites.forEach((movie) => {
+      const genres = checkGenre(movie.genre_ids || []);
+
       const movieEl = document.createElement("div");
       movieEl.className =
         "bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:scale-105 hover:shadow-xl transition transform";
@@ -19,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="p-4">
           <h3 class="text-lg font-bold">${movie.title}</h3>
           <p class="text-gray-400 text-sm">📅 ${movie.releaseDate}</p>
+          <p class="text-gray-300 text-xs my-2">🎬 <span class="italic font-bold">${genres}</span></p>
+          <p class="text-gray-400 text-sm mt-2">${movie.overview}</p>
           <button class="mt-2 bg-red-500 text-white px-3 py-1 rounded text-xs font-semibold hover:bg-red-600 transition"
             onclick="removeFromFavorites(${movie.id})">
             ❌ Aus Favoriten entfernen
@@ -54,4 +58,34 @@ function removeFromFavorites(id) {
   if (favorites.length === 0) {
     document.getElementById("empty-message").classList.remove("hidden");
   }
+}
+
+//Genre checken
+function checkGenre(genreIds) {
+  const genresArray = [
+    { id: 28, name: "Action" },
+    { id: 12, name: "Adventure" },
+    { id: 16, name: "Animation" },
+    { id: 35, name: "Comedy" },
+    { id: 80, name: "Crime" },
+    { id: 99, name: "Documentary" },
+    { id: 18, name: "Drama" },
+    { id: 10751, name: "Family" },
+    { id: 14, name: "Fantasy" },
+    { id: 36, name: "History" },
+    { id: 27, name: "Horror" },
+    { id: 10402, name: "Music" },
+    { id: 9648, name: "Mystery" },
+    { id: 10749, name: "Romance" },
+    { id: 878, name: "Science Fiction" },
+    { id: 10770, name: "TV Movie" },
+    { id: 53, name: "Thriller" },
+    { id: 10752, name: "War" },
+    { id: 37, name: "Western" },
+  ];
+
+  const names = genresArray
+    .filter((genre) => genreIds.includes(genre.id))
+    .map((genre) => genre.name);
+  return names.join(", ");
 }
