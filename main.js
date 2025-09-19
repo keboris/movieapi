@@ -99,14 +99,20 @@ const renderMovie = (data) => {
           <button class="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold hover:bg-yellow-300 transition cursor-pointer hidden">
             Show More
           </button>
-
-          <button onclick="addToFavorites(${data.id}, '${data.title}', '${
-    data.poster_path
-  }', '${data.release_date}')"
-            class="bg-green-400 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold hover:bg-green-300 transition cursor-pointer"
-          >
-            ➕ Favorites
-          </button>
+<button 
+  onclick="addToFavorites(
+    ${data.id}, 
+    '${data.title.replace(/'/g, "\\'")}', 
+    '${data.poster_path}', 
+    '${data.release_date}',
+    '${data.overview.replace(/'/g, "\\'")}',
+    [${data.genre_ids}],
+    this
+  )"
+  class="bg-green-400 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold hover:bg-green-300 transition cursor-pointer"
+>
+  ➕ Favorites
+</button>
         </div>
       </div>
     </div>`;
@@ -303,6 +309,40 @@ function checkGenreDetail(genres) {
   return names.join(", ");
 }
 
+//NEU
+// Fügt einen Film zu Favoriten hinzu
+function addToFavorites(
+  id,
+  title,
+  poster,
+  releaseDate,
+  overview,
+  genre_ids,
+  button
+) {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+  if (!favorites.find((f) => f.id === id)) {
+    favorites.push({ id, title, poster, releaseDate, overview, genre_ids });
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    if (button) {
+      button.textContent = "⭐ Favorit";
+      button.disabled = true;
+      button.classList.remove("bg-green-400", "hover:bg-green-300");
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+    }
+    alert(`${title} wurde zu deinen Favoriten hinzugefügt!`);
+  } else {
+    if (button) {
+      button.textContent = "⭐ Favorit";
+      button.disabled = true;
+      button.classList.remove("bg-green-400", "hover:bg-green-300");
+      button.classList.add("bg-gray-500", "cursor-not-allowed");
+    }
+    alert(`${title} ist bereits in deinen Favoriten.`);
+  }
+}
 // Funktionen für die Suche
 // Abschnitt für die Suchfunktion
 // Eine globale click Aktion für die modale Liste
