@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="main.js" defer></script>
+    <script src="main.js" type="module"></script>
 
     <title>TMBD Movies</title>
   </head>
   <body class="bg-gray-900 text-white min-h-screen flex flex-col">
     <header class="bg-gray-800 shadow-md sticky top-0 z-10">
       <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
-        <h1 class="text-2xl font-bold text-yellow-400">
-          <a href="">🎥 TMBD Movies</a>
-        </h1>
+        <a href=""
+          ><img src="src/logo.png" alt="TMBD Movies" class="w-16 h-auto"
+        /></a>
         <div class="flex items-center gap-4">
           <input
             id="search-container"
@@ -113,24 +113,38 @@
       </div>
     </div>
     <!-- -->
+    <!-- Modal INfo -->
+    <div
+      id="infoModal"
+      class="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-start pt-20 z-99 hidden"
+    >
+      <div
+        id="infoModal-container"
+        class="bg-green-800 shadow-md rounded-xl p-4 w-auto max-w-xl mx-auto"
+      >
+        <p
+          id="text-infoModal"
+          class="px-4 mb-3 text-white text-center placeholder-gray-400 w-full"
+        ></p>
+        <button
+          id="close-infoModal"
+          class="bg-black text-white font-bold rounded px-6 py-2 float-right cursor-pointer"
+        >
+          Ok
+        </button>
+      </div>
+    </div>
+    <!-- -->
 
     <!-- Modal Details Movie -->
     <div
       id="movieModal"
-      class="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-center z-50 hidden"
+      class="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex justify-center items-center z-50 overflow-y-auto hidden"
     >
       <div
         id="movieModal-container"
         class="flex flex-col items-center sm:flex-row w-[80%] bg-black rounded-lg"
-      >
-        <!--button
-          id="closeModal"
-          class="absolute top-3 right-3 text-white text-3xl cursor-pointer font-bold hover:text-red-500 transition"
-        >
-          &times;
-        </button>
-        <div id="modalContent" class=""></div-->
-      </div>
+      ></div>
     </div>
     <!-- -->
   </body>
