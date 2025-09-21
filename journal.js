@@ -1,5 +1,3 @@
-//import { truncate } from "./main.js";
-//console.log(truncate("Ceci est un texte très long", 10));
 const favoritesContainer = document.getElementById("favorites-container");
 const emptyMessage = document.getElementById("empty-message");
 
