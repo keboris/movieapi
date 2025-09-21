@@ -90,7 +90,7 @@ const renderMovie = (data) => {
 
   if (isFavorite) {
     btnClass = "font-bold bg-gray-500 pointer-events-none";
-    btnFav = "⭐ Favorite";
+    btnFav = "⭐ Favorited";
     hiddenBtn = "";
   }
 
@@ -302,7 +302,7 @@ const renderShowMovieDetails = (mData, vData) => {
 
   if (isFavorite) {
     btnDetailClass = "font-bold bg-gray-500 pointer-events-none";
-    btnDetailFav = "⭐ Favorite";
+    btnDetailFav = "⭐ Favorited";
     hiddenDetailBtn = "";
   }
 
@@ -349,7 +349,7 @@ const renderShowMovieDetails = (mData, vData) => {
         <p class="text-sm mb-2">📅 ${mData.release_date}</p>
         
         ${overview}
-        
+
         <div class="flex justify-start items-center gap-2"> 
         <button class="favoriteBtn mt-4 px-4 py-2 text-gray-900 px-3 py-3 rounded text-xs ${btnDetailClass} transition cursor-pointer">
             ${btnDetailFav}
@@ -482,7 +482,7 @@ function addToFavorites(
     localStorage.setItem("favorites", JSON.stringify(favorites));
 
     if (button) {
-      button.textContent = "⭐ Favorite";
+      button.textContent = "⭐ Favorited";
       button.disabled = true;
       button.classList.remove("bg-green-400", "hover:bg-green-300");
       button.classList.add("font-bold", "bg-gray-500", "cursor-not-allowed");
