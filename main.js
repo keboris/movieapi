@@ -68,14 +68,6 @@ searchModalContainer.addEventListener("input", (e) => {
     .catch((err) => console.error(err));
 });
 
-/*popularContainer.addEventListener("click", (e) => {
-  if (e.target.tagName === "BUTTON" || e.target.tagName === "P") return;
-  const card = e.target.closest("[data-movie-id]");
-  if (!card) return;
-  const movieId = card.dataset.movieId;
-  showMovieDetails(movieId);
-});*/
-
 const renderMovie = (data) => {
   const genres = checkGenre(data.genre_ids);
 
@@ -85,8 +77,6 @@ const renderMovie = (data) => {
 
   const favorites = JSON.parse(localStorage.getItem("favorites")) ?? [];
   const isFavorite = favorites.find((fav) => fav.id === data.id);
-
-  //updateFavoriteBtn(data.id, isFavorite);
 
   if (isFavorite) {
     btnClass = "font-bold bg-gray-500 pointer-events-none";
@@ -169,20 +159,6 @@ const renderMovie = (data) => {
 
   delBtn.addEventListener("click", () => {
     unfavoriteMovie(data.id, data.title, btn, delBtn);
-    /*removeFromFavorites(data.id);
-    delBtn.classList.add("hidden");
-
-    btn.textContent = "➕ Favorites";
-    btn.classList.remove("font-bold", "bg-gray-500", "cursor-not-allowed");
-    btn.classList.add("bg-green-400", "hover:bg-green-300");
-    btn.disabled = false;
-
-    infoModalContainer.classList.remove("bg-green-800");
-    infoModalContainer.classList.add("bg-orange-200");
-    textInfoModal.classList.remove("text-white");
-    textInfoModal.classList.add("text-black");
-    textInfoModal.innerHTML = `⚠️ <span class="font-bold">${data.title}</span> has been removed from your favorites!`;
-    infoModal.classList.remove("hidden");*/
   });
 };
 
@@ -438,7 +414,7 @@ closeInfoModal.addEventListener("click", () => {
   infoModal.classList.add("hidden");
 });
 
-export function truncate(text, maxLength) {
+function truncate(text, maxLength) {
   if (!text) return;
   return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 }
