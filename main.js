@@ -320,6 +320,13 @@ const renderShowMovieDetails = (mData, vData) => {
         : "https://image.tmdb.org/t/p/w500/" + mData.backdrop_path
       : "https://image.tmdb.org/t/p/w500/" + mData.poster_path;
 
+  const overview = mData.overview
+    ? `
+      <p class="text-sm mb-2">
+        <strong>Overview :</strong> ${mData.overview}
+      </p>`
+    : "";
+
   const html = `
     <div class="hidden sm:block w-1/3 h-full">
       <img
@@ -336,13 +343,13 @@ const renderShowMovieDetails = (mData, vData) => {
         <h2 class="text-2xl font-bold text-yellow-400 mb-2">
           ${mData.title}
         </h2>
-        
+
         ${movieGenreHtml}
         
         <p class="text-sm mb-2">📅 ${mData.release_date}</p>
-        <p class="text-sm mb-2">
-          <strong>Overview :</strong> ${mData.overview}
-        </p>
+        
+        ${overview}
+        
         <div class="flex justify-start items-center gap-2"> 
         <button class="favoriteBtn mt-4 px-4 py-2 text-gray-900 px-3 py-3 rounded text-xs ${btnDetailClass} transition cursor-pointer">
             ${btnDetailFav}
