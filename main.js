@@ -282,7 +282,7 @@ const renderShowMovieDetails = (mData, vData) => {
     youTube = `https://www.youtube.com/embed/${trailer.key}?autoplay=0&mute=0&controls=0`;
     trailerShow = `
     <div class="w-full bg-dark rounded-xl px-6 pt-2 mt-2 sm:pt-6 sm:mt-6 shadow-lg text-white">
-        <h2 class="text-2xl text-center font-bold mb-2">Thriller</h2>
+        <h2 class="text-2xl text-center font-bold mb-2">Trailer</h2>
       </div>
 
       <iframe class="w-auto h-[200px] md:h-[300px] lg:h-[400px] rounded-lg shadow-lg" src="${youTube}"
