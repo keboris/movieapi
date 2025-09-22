@@ -25,8 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <p class="text-gray-400 text-sm mt-2">${movie.overview}</p>
           <button class="favoriteBtn mt-2 bg-red-500 text-white px-3 py-2 rounded text-xs font-semibold hover:bg-red-600 transition cursor-pointer">
-            ❌ Remove from favorites
+            ❌ Remove  from  favorites
           </button>
+          <button class="mt-2 bg-green-500 text-white px-3 py-2 rounded text-xs font-semibold hover:bg-green-600 transition cursor-pointer" onclick="addNoteToFavorite(${movie.id})">
+            Add notice to favorites
+          </button>
+
         </div>
       </div>
       `;
@@ -59,3 +63,44 @@ function removeFromFavorites(id) {
     emptyMessage.classList.remove("hidden");
   }
 }
+
+const noticeModal = document.getElementById("noticeModal");
+const noticeModalContainer = document.getElementById("noticeModal-container");
+const modalContent = document.getElementById("modalContent");
+
+let noticeMovieId = 0;
+
+function addNoteToFavorite(movieId) {
+  const txtInput = document.getElementById("noticeModalText");
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const result = favorites.filter((movie) => movie.id == movieId); // Filtern auf ID des Films
+  const singleO = result[0]; // Daten aus dem Array in Objekt übertragen
+  txtInput.value = singleO.notice === undefined ? "" : singleO.notice;
+  noticeMovieId = movieId;
+  noticeModal.classList.remove("hidden");
+}
+
+const btnCancel = document.getElementById("btnCancel");
+const btnSave = document.getElementById("btnSave");
+
+btnCancel.addEventListener("click", () => {
+  noticeModal.classList.add("hidden");
+});
+
+btnSave.addEventListener("click", () => {
+  const txtInput = document.getElementById("noticeModalText");
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const result = favorites.filter((movie) => movie.id == noticeMovieId); // Filtern auf ID des Films
+
+  const singleO = result[0]; // Daten aus dem Array in Objekt übertragen
+
+  const newEntry = { notice: txtInput.value };
+  let newObject = { ...singleO, ...newEntry }; // Notiz anfügen
+  const holdData = favorites.filter((movie) => movie.id != noticeMovieId);
+  holdData.push(newObject);
+
+  const toLocalStorage = JSON.stringify([...holdData]);
+  localStorage.setItem("favorites", toLocalStorage);
+  txtInput.value = "";
+  noticeModal.classList.add("hidden");
+});
