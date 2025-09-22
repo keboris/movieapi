@@ -10,6 +10,12 @@ const options = {
       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMDdlZjc4NjQ5YTg5NDFjNTdiY2UxYmI5NjQ4MzQxZCIsIm5iZiI6MTc1Nzk2NjU3Ni41MjgsInN1YiI6IjY4Yzg3MGYwNmUxYjM5NDFlZGUzMDc4ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ggZrgF2EHUv4sjnLQzREz9CxC-htfnyjK2oco9qFb8w",
   },
 };
+
+// =========================
+// AUSWAHL DER DOM-ELEMENTE
+// =========================
+
+// Abruf der benötigten HTML-Elemente
 const search = document.getElementById("search-container");
 const searchModal = document.getElementById("searchModal");
 const searchModalContainer = document.getElementById("searchModalContainer");
@@ -27,9 +33,10 @@ const infoModalContainer = document.getElementById("infoModal-container");
 const closeInfoModal = document.getElementById("close-infoModal");
 const textInfoModal = document.getElementById("text-infoModal");
 
+// Favoriten aus dem localStorage laden oder leeres Array verwenden
 const favorites = JSON.parse(localStorage.getItem("favorites")) ?? [];
 
-// Fetch Movies Genre
+// Genres aus der API abrufen und in genresArray speichern
 let genresArray = [];
 
 fetch(urlGenre, options)
@@ -39,12 +46,13 @@ fetch(urlGenre, options)
   })
   .catch((err) => console.error(err));
 
-// Fetch Popular Movies
+// Beliebte Filme abrufen und renderPopular-Funktion aufrufen
 fetch(urlPopular, options)
   .then((res) => res.json())
   .then((json) => renderPopular(json))
   .catch((err) => console.error(err));
 
+// Wenn man auf die Suchleiste klickt, wird das Suchmodal geöffnet
 search.addEventListener("focus", () => {
   searchModal.classList.remove("hidden");
   searchModalContainer.value = "";
@@ -52,12 +60,14 @@ search.addEventListener("focus", () => {
   searchResults.innerHTML = "";
 });
 
+// Suchmodal schließen, wenn man außerhalb klickt
 searchModal.addEventListener("click", (e) => {
   if (e.target === searchModal) {
     searchModal.classList.add("hidden");
   }
 });
 
+// Lauschen der Eingabe in der Suche -> Ergebnisse abrufen
 searchModalContainer.addEventListener("input", (e) => {
   const inputText = e.target.value;
 
@@ -68,10 +78,12 @@ searchModalContainer.addEventListener("input", (e) => {
     .catch((err) => console.error(err));
 });
 
+// Funktion zum Anzeigen jedes beliebten Films als Karte
 const renderMovie = (data) => {
   const genres = checkGenre(data.genre_ids);
 
-  let btnClass = "font-semibold bg-green-400 hover:bg-green-300";
+  // Verwaltung der Favoriten-Buttons (hinzufügen/entfernen)
+  let btnClass = "font-semibold bg-green-400 hover:bg-green-300 cursor-pointer";
   let btnFav = "➕ Favorites";
   let hiddenBtn = "hidden";
 
@@ -79,11 +91,12 @@ const renderMovie = (data) => {
   const isFavorite = favorites.find((fav) => fav.id === data.id);
 
   if (isFavorite) {
-    btnClass = "font-bold bg-gray-500 pointer-events-none";
+    btnClass = "font-bold bg-gray-500";
     btnFav = "⭐ Favorited";
     hiddenBtn = "";
   }
 
+  // Erstellung der HTML-Karte des Films
   const html = `
     <div data-movie-id="${
       data.id
@@ -110,7 +123,7 @@ const renderMovie = (data) => {
           <button class="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold hover:bg-yellow-300 transition cursor-pointer hidden">
             Show More
           </button>
-          <button class="favoriteBtn text-gray-900 px-3 py-1 rounded-full text-xs ${btnClass} transition cursor-pointer">
+          <button class="favoriteBtn text-gray-900 px-3 py-1 rounded-full text-xs ${btnClass} transition">
             ${btnFav}
           </button>
           <button class="deleteFavorite text-white-900 font-bold px-3 py-1 rounded-full text-xs bg-red-500 hover:bg-red-300 hover:text-black transition cursor-pointer ${hiddenBtn}">
@@ -122,8 +135,8 @@ const renderMovie = (data) => {
 
   popularContainer.insertAdjacentHTML("beforeend", html);
 
+  // Event Listener auf Bild und Titel hinzufügen, um Details zu öffnen
   const cardMovie = document.querySelector(`div[data-movie-id='${data.id}']`);
-
   const clickEl = cardMovie.querySelectorAll("img, h3");
 
   clickEl.forEach((el) => {
@@ -132,6 +145,7 @@ const renderMovie = (data) => {
     });
   });
 
+  // Buttons zum Hinzufügen/Entfernen von Favoriten
   const btn = popularContainer.querySelector(
     `[data-movie-id='${data.id}'] .favoriteBtn`
   );
@@ -162,15 +176,18 @@ const renderMovie = (data) => {
   });
 };
 
+// Zeigt die Liste der beliebten Filme an
 const renderPopular = (data) => {
   const movies = data.results;
   movies.forEach((movie) => renderMovie(movie));
   console.log("Result : ", movies);
 };
 
+// Zeigt ein einzelnes Suchergebnis an
 const renderSearchResult = (data) => {
   const genres = checkGenre(data.genre_ids);
 
+  // Bestimmt das zu verwendende Bild (Poster, sonst Backdrop, sonst Standardbild)
   const imgMovie =
     data.poster_path === null
       ? data.backdrop_path === null
@@ -178,6 +195,7 @@ const renderSearchResult = (data) => {
         : "https://image.tmdb.org/t/p/w500/" + data.backdrop_path
       : "https://image.tmdb.org/t/p/w500/" + data.poster_path;
 
+  // Erstellt das HTML für einen Film in den Suchergebnissen
   const html = `
   <li data-movie-id="${
     data.id
@@ -200,8 +218,10 @@ const renderSearchResult = (data) => {
   `;
   searchResults.insertAdjacentHTML("beforeend", html);
 
+  // Holt das gerade hinzugefügte <li>-Element
   const liMovEl = searchResults.querySelector(`li[data-movie-id='${data.id}']`);
 
+  // Fügt ein Klick-Event hinzu, um die Filmdetails anzuzeigen
   liMovEl.addEventListener("click", () => {
     console.log("cliqué");
     searchModal.classList.add("hidden");
@@ -209,11 +229,13 @@ const renderSearchResult = (data) => {
   });
 };
 
+// Verarbeitet die gesamte Liste der Suchergebnisse
 const renderSearch = (data) => {
   const movieList = data.results;
 
-  searchResults.innerHTML = "";
+  searchResults.innerHTML = ""; // Löscht die vorherigen Suchergebnisse
 
+  // Wenn keine Ergebnisse vorhanden sind, Nachricht anzeigen
   if (movieList.length === 0) {
     const html = `
       <li class="flex justify-center py-2 rounded-lg bg-gray-700">
@@ -229,11 +251,12 @@ const renderSearch = (data) => {
   movieList.forEach((movie) => renderSearchResult(movie));
 };
 
-// Show Movie Details
+// Funktion zum Abrufen der Filmdetails und Videos
 const renderMovieDetails = (movieId) => {
   const urlMovie = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
   const urlVideos = `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`;
 
+  // Holt die Filminformationen und Videos gleichzeitig ab
   Promise.all([
     fetch(urlMovie, options).then((res) => res.json()),
     fetch(urlVideos, options).then((res) => res.json()),
@@ -244,16 +267,20 @@ const renderMovieDetails = (movieId) => {
     .catch((err) => console.error(err));
 };
 
+// Zeigt die Filmdetails im Modal an
 const renderShowMovieDetails = (mData, vData) => {
   let youTube = "";
   let trailerShow = "";
   let movieGenreHtml = "";
 
+  // Sucht den offiziellen Trailer auf YouTube
   const trailer = vData.results.find(
     (video) =>
       video.site === "YouTube" && video.type === "Trailer" && video.official
   );
-  console.log("mData : ", mData, "vData", vData);
+  //console.log("mData : ", mData, "vData", vData);
+
+  // Wenn ein Trailer existiert, wird das YouTube-iframe vorbereitet
   if (trailer) {
     youTube = `https://www.youtube.com/embed/${trailer.key}?autoplay=0&mute=0&controls=0`;
     trailerShow = `
@@ -268,20 +295,24 @@ const renderShowMovieDetails = (mData, vData) => {
         allowfullscreen
       ></iframe>`;
   }
-  console.log("Trailer ? ", trailer);
-  let btnDetailClass = "font-semibold bg-green-400 hover:bg-green-300";
+
+  let btnDetailClass =
+    "font-semibold bg-green-400 hover:bg-green-300 cursor-pointer";
   let btnDetailFav = "➕ Favorites";
   let hiddenDetailBtn = "hidden";
 
+  // Überprüft, ob dieser Film bereits in den Favoriten ist
   const favorites = JSON.parse(localStorage.getItem("favorites")) ?? [];
   const isFavorite = favorites.find((fav) => fav.id === mData.id);
 
   if (isFavorite) {
-    btnDetailClass = "font-bold bg-gray-500 pointer-events-none";
+    // Ändert Stil und Text der Schaltfläche, wenn der Film bereits Favorit ist
+    btnDetailClass = "font-bold bg-gray-500";
     btnDetailFav = "⭐ Favorited";
     hiddenDetailBtn = "";
   }
 
+  // Erstellt die Liste der Genres für die Anzeige
   const movieGenre = checkGenreDetail(mData.genres);
   if (movieGenre) {
     movieGenreHtml = `
@@ -289,6 +320,8 @@ const renderShowMovieDetails = (mData, vData) => {
       🎬 <span class="italic font-bold">${movieGenre}</span>
     </p>`;
   }
+
+  // Bestimmt das anzuzeigende Bild
   const imgMovie =
     mData.poster_path === null
       ? mData.backdrop_path === null
@@ -296,6 +329,7 @@ const renderShowMovieDetails = (mData, vData) => {
         : "https://image.tmdb.org/t/p/w500/" + mData.backdrop_path
       : "https://image.tmdb.org/t/p/w500/" + mData.poster_path;
 
+  // Zeigt eine Zusammenfassung an, falls vorhanden
   const overview = mData.overview
     ? `
       <p class="text-sm mb-2">
@@ -303,6 +337,7 @@ const renderShowMovieDetails = (mData, vData) => {
       </p>`
     : "";
 
+  // Erstellt das Haupt-HTML für die Filmdetails
   const html = `
     <div class="hidden sm:block w-1/3 h-full">
       <img
@@ -341,8 +376,8 @@ const renderShowMovieDetails = (mData, vData) => {
 
   movieModal.classList.remove("hidden");
 
+  // Holt die Schaltflächen und fügt Events hinzu, um die Favoriten zu verwalten
   const btnDetail = movieModalContainer.querySelector(".favoriteBtn");
-
   const delBtnDetail = movieModalContainer.querySelector(".deleteFavorite");
 
   const favBtn = popularContainer.querySelector(
@@ -377,12 +412,14 @@ const renderShowMovieDetails = (mData, vData) => {
   });
 };
 
+// Schließt das Modal, wenn man außerhalb des Inhalts klickt
 movieModal.addEventListener("click", (e) => {
   if (e.target === movieModal) {
     closeMovieModal();
   }
 });
 
+// Fügt einen Schließen-Button im Modal hinzu
 const renderCloseModal = (id) => {
   const modalClose = document.createElement("button");
   modalClose.className =
@@ -395,12 +432,14 @@ const renderCloseModal = (id) => {
   movieModalContainer.appendChild(modalClose);
 };
 
+// Schließt das Info-Modal, wenn man außerhalb klickt
 infoModal.addEventListener("click", (e) => {
   if (e.target === infoModal) {
     infoModal.classList.add("hidden");
   }
 });
 
+// Ermöglicht das Schließen des Info-Modals mit Enter oder Space
 document.addEventListener("keydown", (e) => {
   if (!infoModal.classList.contains("hidden")) {
     if (e.key === "Enter" || e.key === " ") {
@@ -410,15 +449,22 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// Schließt das Info-Modal, wenn man auf den Button klickt
 closeInfoModal.addEventListener("click", () => {
   infoModal.classList.add("hidden");
 });
 
+// =========================
+// FUNCTIONS
+// =========================
+
+// Kürzt einen zu langen Text (fügt "..." hinzu)
 function truncate(text, maxLength) {
   if (!text) return;
   return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 }
 
+// Überprüft die Filmgenres und gibt die Namen zurück
 function checkGenre(GenreIds) {
   const names = genresArray
     .filter((genre) => GenreIds.includes(genre.id))
@@ -426,13 +472,13 @@ function checkGenre(GenreIds) {
   return names.join(", ");
 }
 
+// Holt die Genres aus den Filmdetails
 function checkGenreDetail(genres) {
   const names = genres.map((genre) => genre.name);
   return names.join(", ");
 }
 
-//NEU
-// Fügt einen Film zu Favoriten hinzu
+// Fügt einen Film zu den Favoriten hinzu und aktualisiert den Button
 function addToFavorites(
   id,
   title,
@@ -445,6 +491,7 @@ function addToFavorites(
 ) {
   const favorites = JSON.parse(localStorage.getItem("favorites")) ?? [];
 
+  // Prüft, ob der Film schon in den Favoriten ist
   if (!favorites.find((f) => f.id === id)) {
     favorites.push({
       id,
@@ -457,13 +504,19 @@ function addToFavorites(
     });
     localStorage.setItem("favorites", JSON.stringify(favorites));
 
+    // Aktualisiert den Button-Stil, um zu zeigen, dass es favorisiert ist
     if (button) {
       button.textContent = "⭐ Favorited";
       button.disabled = true;
-      button.classList.remove("bg-green-400", "hover:bg-green-300");
-      button.classList.add("font-bold", "bg-gray-500", "cursor-not-allowed");
+      button.classList.remove(
+        "bg-green-400",
+        "hover:bg-green-300",
+        "cursor-pointer"
+      );
+      button.classList.add("font-bold", "bg-gray-500");
     }
 
+    // Zeigt eine Bestätigungsmeldung
     infoModalContainer.classList.remove("bg-orange-200");
     infoModalContainer.classList.add("bg-green-800");
     textInfoModal.classList.remove("text-black");
@@ -474,29 +527,33 @@ function addToFavorites(
   }
 }
 
+// Entfernt einen Film aus den Favoriten
 function removeFromFavorites(id) {
   const favorites = JSON.parse(localStorage.getItem("favorites")) ?? [];
   const updateFavorites = favorites.filter((movie) => movie.id !== id);
   localStorage.setItem("favorites", JSON.stringify(updateFavorites));
 }
 
+// Zeigt die Details eines Films
 function showMovieDetails(movieId) {
   renderCloseModal(movieId);
   renderMovieDetails(movieId);
 }
 
+// 🔒 Schließt das Modal und leert seinen Inhalt
 function closeMovieModal() {
   movieModalContainer.innerHTML = "";
   movieModal.classList.add("hidden");
 }
 
+// Entfernt einen Film aus den Favoriten und setzt den Button zurück
 function unfavoriteMovie(movieId, movieTitle, favBtn, unfavBtn) {
   removeFromFavorites(movieId);
   unfavBtn.classList.add("hidden");
 
   favBtn.textContent = "➕ Favorites";
-  favBtn.classList.remove("font-bold", "bg-gray-500", "cursor-not-allowed");
-  favBtn.classList.add("bg-green-400", "hover:bg-green-300");
+  favBtn.classList.remove("font-bold", "bg-gray-500");
+  favBtn.classList.add("bg-green-400", "hover:bg-green-300", "cursor-pointer");
   favBtn.disabled = false;
 
   infoModalContainer.classList.remove("bg-green-800");
@@ -507,6 +564,7 @@ function unfavoriteMovie(movieId, movieTitle, favBtn, unfavBtn) {
   infoModal.classList.remove("hidden");
 }
 
+// Aktualisiert den Favoriten-Button-Stil je nach Status
 function updateFavoriteBtn(isFavorite, favBtn, unfavBtn) {
   if (!favBtn) return;
 
@@ -515,15 +573,21 @@ function updateFavoriteBtn(isFavorite, favBtn, unfavBtn) {
     favBtn.classList.remove(
       "font-semibold",
       "bg-green-400",
-      "hover:bg-green-300"
+      "hover:bg-green-300",
+      "cursor-pointer"
     );
-    favBtn.classList.add("font-bold", "bg-gray-500", "pointer-events-none");
+    favBtn.classList.add("font-bold", "bg-gray-500");
 
     unfavBtn.classList.remove("hidden");
   } else {
-    favBtn.textContent = "➕ Favorite";
-    favBtn.classList.remove("font-bold", "bg-gray-500", "pointer-events-none");
-    favBtn.classList.add("font-semibold", "bg-green-400", "hover:bg-green-300");
+    favBtn.textContent = "➕ Favorites";
+    favBtn.classList.remove("font-bold", "bg-gray-500");
+    favBtn.classList.add(
+      "font-semibold",
+      "bg-green-400",
+      "hover:bg-green-300",
+      "cursor-pointer"
+    );
 
     unfavBtn.classList.add("hidden");
   }
